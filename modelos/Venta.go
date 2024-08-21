@@ -5,7 +5,8 @@ import "gorm.io/gorm"
 type Venta struct {
 	gorm.Model
 
-	IDproducto string `gorm:"not null"`
-	Cantidad   uint   `gorm:"not null"`
-	FechaVenta uint   `gorm:"not null"`
+	ProductoID int      `gorm:"not null"`
+	Producto   Producto `gorm:"foreignKey:ProductoID`
+	Cantidad   uint     `gorm:"not null"`
+	FechaVenta string   `gorm:"not null"`
 }
