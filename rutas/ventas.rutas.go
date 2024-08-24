@@ -33,21 +33,44 @@ func GetVentaHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(&venta)
 }
 
-func PostVentaHandler(w http.ResponseWriter, r *http.Request) {
-	var venta modelos.Venta
+func PostVentasHandler(w http.ResponseWriter, r *http.Request) {
+	var ventas []modelos.Venta
 
-	json.NewDecoder(r.Body).Decode(&venta)
+	json.NewDecoder(r.Body).Decode(&ventas)
 
-	ventaCreada := baseDedatos.DB.Create(&venta)
+	tx := baseDedatos.DB.Begin()
 
-	err := ventaCreada.Error
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(err.Error()))
-		return
+	for _, venta := range ventas {
+		var Producto modelos.Producto
+		err := tx.Where("codigo_unico = ?", venta.CodigoUnicoProducto).First(&Producto).Error
+		if err != nil {
+			tx.Rollback()
+			http.Error(w, "Producto no encontrado: "+err.Error(), http.StatusNotFound)
+			return
+		}
+
+		if Producto.StockDisponible < venta.Cantidad {
+			tx.Rollback()
+			http.Error(w, "Stock no disponible para realizar la venta", http.StatusBadRequest)
+			return
+		}
+		Producto.StockDisponible -= venta.Cantidad
+		tx.Save(&Producto)
 	}
 
-	json.NewEncoder(w).Encode(&venta)
+	//Crear las ventas
+	for _, venta := range ventas {
+		ventaCreada := tx.Create(&venta)
+		err := ventaCreada.Error
+		if err != nil {
+			tx.Rollback()
+			http.Error(w, "Error al crear las ventas: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+
+	tx.Commit()
+	w.WriteHeader(http.StatusOK)
 }
 
 func DeleteVentaHandler(w http.ResponseWriter, r *http.Request) {

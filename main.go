@@ -14,6 +14,7 @@ func main() {
 
 	baseDedatos.DB.AutoMigrate(modelos.Producto{})
 	baseDedatos.DB.AutoMigrate(modelos.Venta{})
+	//baseDedatos.DB.Exec(`ALTER TABLE venta ADD CONSTRAINT fk_codigo_unico_producto FOREIGN KEY (codigo_unico_producto) REFERENCES productos(codigo_unico)`)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", rutas.HomeHandler)
@@ -29,7 +30,7 @@ func main() {
 
 	r.HandleFunc("/ventas", rutas.GetVentasHandler).Methods("GET")
 	r.HandleFunc("/ventas/{id}", rutas.GetVentaHandler).Methods("GET")
-	r.HandleFunc("/ventas", rutas.PostVentaHandler).Methods("POST")
+	r.HandleFunc("/ventas", rutas.PostVentasHandler).Methods("POST")
 	r.HandleFunc("/ventas/{id}", rutas.DeleteVentaHandler).Methods("DELETE")
 
 	http.ListenAndServe(":3000", r)

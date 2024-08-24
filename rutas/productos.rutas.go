@@ -34,20 +34,24 @@ func GetProductoHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostProductoHandler(w http.ResponseWriter, r *http.Request) {
-	var producto modelos.Producto
+	var productos []modelos.Producto
 
-	json.NewDecoder(r.Body).Decode(&producto)
+	json.NewDecoder(r.Body).Decode(&productos)
 
-	productoCreado := baseDedatos.DB.Create(&producto)
+	tx := baseDedatos.DB.Begin()
+	for _, producto := range productos {
+		productoCreado := tx.Create(&producto)
 
-	err := productoCreado.Error
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest) //devuelve codigo 400 de error
-		w.Write([]byte(err.Error()))
-		return
+		err := productoCreado.Error
+		if err != nil {
+			tx.Rollback()
+			http.Error(w, "Error al crear las ventas: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
 
-	json.NewEncoder(w).Encode(&producto)
+	tx.Commit()
+	w.WriteHeader(http.StatusOK)
 }
 
 func DeleteProductoHandler(w http.ResponseWriter, r *http.Request) {
