@@ -33,7 +33,7 @@ func GetProductoHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func PostProductoHandler(w http.ResponseWriter, r *http.Request) {
+func PostProductosHandler(w http.ResponseWriter, r *http.Request) {
 	var productos []modelos.Producto
 
 	json.NewDecoder(r.Body).Decode(&productos)

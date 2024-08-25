@@ -8,4 +8,5 @@ type Venta struct {
 	CodigoUnicoProducto string `gorm:"not null"`
 	Cantidad            uint   `gorm:"not null"`
 	FechaVenta          string `gorm:"not null"`
+	Monto               uint   `gorm:"not null"`
 }

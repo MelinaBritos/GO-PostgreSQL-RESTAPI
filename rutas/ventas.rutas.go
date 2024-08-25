@@ -49,12 +49,34 @@ func PostVentasHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		//Restar el stock de la venta si es posible
 		if Producto.StockDisponible < venta.Cantidad {
 			tx.Rollback()
 			http.Error(w, "Stock no disponible para realizar la venta", http.StatusBadRequest)
 			return
 		}
 		Producto.StockDisponible -= venta.Cantidad
+
+		// Reabastecer si el stock es bajo
+		if Producto.StockDisponible < Producto.StockMinimo {
+			var compra modelos.Compra
+			var productoCompra modelos.ProductoCompra
+			err := tx.Where("codigo = ?", Producto.CodigoUnico).First(&productoCompra).Error
+			if err != nil {
+				tx.Rollback()
+				http.Error(w, "ProductoCompra no encontrado: "+err.Error(), http.StatusNotFound)
+				return
+			}
+			compra.CodigoProductoCompra = productoCompra.Codigo
+			if productoCompra.PrecioActual > productoCompra.PrecioDeseado {
+				compra.Estado = "No completado"
+			} else {
+				compra.Estado = "Completado"
+				compra.Precio = productoCompra.PrecioActual
+				Producto.StockDisponible += 30
+			}
+			tx.Create(&compra)
+		}
 		tx.Save(&Producto)
 	}
 

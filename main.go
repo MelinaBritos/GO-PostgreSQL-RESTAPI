@@ -14,7 +14,8 @@ func main() {
 
 	baseDedatos.DB.AutoMigrate(modelos.Producto{})
 	baseDedatos.DB.AutoMigrate(modelos.Venta{})
-	//baseDedatos.DB.Exec(`ALTER TABLE venta ADD CONSTRAINT fk_codigo_unico_producto FOREIGN KEY (codigo_unico_producto) REFERENCES productos(codigo_unico)`)
+	baseDedatos.DB.AutoMigrate(modelos.Compra{})
+	baseDedatos.DB.AutoMigrate(modelos.ProductoCompra{})
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", rutas.HomeHandler)
@@ -23,7 +24,7 @@ func main() {
 
 	r.HandleFunc("/productos", rutas.GetProductosHandler).Methods("GET")
 	r.HandleFunc("/productos/{id}", rutas.GetProductoHandler).Methods("GET")
-	r.HandleFunc("/productos", rutas.PostProductoHandler).Methods("POST")
+	r.HandleFunc("/productos", rutas.PostProductosHandler).Methods("POST")
 	r.HandleFunc("/productos/{id}", rutas.DeleteProductoHandler).Methods("DELETE")
 
 	// Rutas de ventas
@@ -32,6 +33,19 @@ func main() {
 	r.HandleFunc("/ventas/{id}", rutas.GetVentaHandler).Methods("GET")
 	r.HandleFunc("/ventas", rutas.PostVentasHandler).Methods("POST")
 	r.HandleFunc("/ventas/{id}", rutas.DeleteVentaHandler).Methods("DELETE")
+
+	// Rutas de productos compra
+
+	r.HandleFunc("/productoCompra", rutas.GetProductosCompraHandler).Methods("GET")
+	r.HandleFunc("/productoCompra/{id}", rutas.GetProductoCompraHandler).Methods("GET")
+	r.HandleFunc("/productoCompra", rutas.PostProductosCompraHandler).Methods("POST")
+	r.HandleFunc("/productoCompra/{id}", rutas.DeleteProductoCompraHandler).Methods("DELETE")
+
+	// Rutas de compras
+
+	r.HandleFunc("/compra", rutas.GetComprasHandler).Methods("GET")
+	r.HandleFunc("/compra/{id}", rutas.GetCompraHandler).Methods("GET")
+	r.HandleFunc("/compra/{id}", rutas.DeleteCompraHandler).Methods("DELETE")
 
 	http.ListenAndServe(":3000", r)
 }
