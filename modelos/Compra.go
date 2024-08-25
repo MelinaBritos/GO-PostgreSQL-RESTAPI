@@ -9,6 +9,6 @@ type Compra struct {
 
 	CodigoProductoCompra string `gorm:"not null"`
 	Precio               uint   `gorm:"not null"`
-	Fecha                string `gorm: "not null"`
+	Fecha                string `gorm:"not null"`
 	Estado               string `gorm:"not null"`
 }
