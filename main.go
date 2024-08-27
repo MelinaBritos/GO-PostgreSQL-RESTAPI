@@ -21,16 +21,6 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", rutas.HomeHandler)
 
-	// Configura CORS
-	corsHandler := handlers.CORS(
-		handlers.AllowedOrigins([]string{"https://proyectoqr-labo.netlify.app"}),
-		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE"}),
-		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
-	)
-
-	// Inicia el servidor con CORS habilitado
-	http.ListenAndServe(":8080", corsHandler(r))
-
 	// Rutas de productos
 
 	r.HandleFunc("/productos", rutas.GetProductosHandler).Methods("GET")
@@ -58,5 +48,13 @@ func main() {
 	r.HandleFunc("/compra/{id}", rutas.GetCompraHandler).Methods("GET")
 	r.HandleFunc("/compra/{id}", rutas.DeleteCompraHandler).Methods("DELETE")
 
-	http.ListenAndServe(":3000", r)
+	// Configura CORS
+	corsHandler := handlers.CORS(
+		handlers.AllowedOrigins([]string{"*"}),
+		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE"}),
+		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
+	)
+
+	// Inicia el servidor con CORS habilitado
+	http.ListenAndServe(":8080", corsHandler(r))
 }
