@@ -6,6 +6,7 @@ import (
 	"github.com/MelinaBritos/GO-PostgreSQL-RESTAPI/baseDedatos"
 	"github.com/MelinaBritos/GO-PostgreSQL-RESTAPI/modelos"
 	"github.com/MelinaBritos/GO-PostgreSQL-RESTAPI/rutas"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -19,6 +20,16 @@ func main() {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", rutas.HomeHandler)
+
+	// Configura CORS
+	corsHandler := handlers.CORS(
+		handlers.AllowedOrigins([]string{"https://proyectoqr-labo.netlify.app"}),
+		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE"}),
+		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
+	)
+
+	// Inicia el servidor con CORS habilitado
+	http.ListenAndServe(":8080", corsHandler(r))
 
 	// Rutas de productos
 
