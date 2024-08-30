@@ -74,7 +74,7 @@ func DeleteProductoHandler(w http.ResponseWriter, r *http.Request) {
 func PutProductoHandler(w http.ResponseWriter, r *http.Request) {
 	var producto modelos.Producto
 	parametros := mux.Vars(r)
-	var stockMinimoNuevo uint
+	var stockMinimoNuevo float64
 
 	tx := baseDedatos.DB.Begin()
 	tx.First(&producto, parametros["id"])
