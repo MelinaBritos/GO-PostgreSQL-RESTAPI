@@ -27,6 +27,7 @@ func main() {
 	r.HandleFunc("/productos/{id}", rutas.GetProductoHandler).Methods("GET")
 	r.HandleFunc("/productos", rutas.PostProductosHandler).Methods("POST")
 	r.HandleFunc("/productos/{id}", rutas.DeleteProductoHandler).Methods("DELETE")
+	r.HandleFunc("/productos/{id}", rutas.PutProductoHandler).Methods("PUT")
 
 	// Rutas de ventas
 

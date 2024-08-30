@@ -70,3 +70,26 @@ func DeleteProductoHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
 }
+
+func PutProductoHandler(w http.ResponseWriter, r *http.Request) {
+	var producto modelos.Producto
+	parametros := mux.Vars(r)
+	var stockMinimoNuevo uint
+
+	tx := baseDedatos.DB.Begin()
+	tx.First(&producto, parametros["id"])
+
+	if producto.ID == 0 {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("Producto no encontrado"))
+		return
+	}
+
+	json.NewDecoder(r.Body).Decode(&stockMinimoNuevo)
+	producto.StockMinimo = stockMinimoNuevo
+	tx.Save(&producto)
+	tx.Commit()
+
+	w.WriteHeader(http.StatusOK)
+
+}
