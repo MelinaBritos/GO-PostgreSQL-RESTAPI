@@ -86,7 +86,7 @@ func PutProductoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewDecoder(r.Body).Decode(&stockMinimoNuevo)
-	producto.StockMinimo = stockMinimoNuevo
+	producto.StockMinimo = uint(stockMinimoNuevo)
 	tx.Save(&producto)
 	tx.Commit()
 
