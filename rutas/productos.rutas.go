@@ -2,6 +2,7 @@ package rutas
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/MelinaBritos/GO-PostgreSQL-RESTAPI/baseDedatos"
@@ -22,6 +23,10 @@ func GetProductoHandler(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 
 	baseDedatos.DB.First(&producto, parametros["id"])
+	if err := validarProducto(producto); err != nil {
+		http.Error(w, "Producto inválido"+err.Error(), http.StatusBadRequest)
+		return
+	}
 
 	if producto.ID == 0 {
 		w.WriteHeader(http.StatusNotFound) // error 404
@@ -37,6 +42,13 @@ func PostProductosHandler(w http.ResponseWriter, r *http.Request) {
 	var productos []modelos.Producto
 
 	json.NewDecoder(r.Body).Decode(&productos)
+
+	for _, producto := range productos {
+		if err := validarProducto(producto); err != nil {
+			http.Error(w, "Producto inválido"+err.Error(), http.StatusBadRequest)
+			return
+		}
+	}
 
 	tx := baseDedatos.DB.Begin()
 	for _, producto := range productos {
@@ -74,7 +86,7 @@ func DeleteProductoHandler(w http.ResponseWriter, r *http.Request) {
 func PutProductoHandler(w http.ResponseWriter, r *http.Request) {
 	var producto modelos.Producto
 	parametros := mux.Vars(r)
-	var stockMinimoNuevo float64
+	var stockMinimoNuevo uint
 
 	tx := baseDedatos.DB.Begin()
 	tx.First(&producto, parametros["id"])
@@ -86,10 +98,28 @@ func PutProductoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewDecoder(r.Body).Decode(&stockMinimoNuevo)
-	producto.StockMinimo = uint(stockMinimoNuevo)
+	producto.StockMinimo = stockMinimoNuevo
 	tx.Save(&producto)
 	tx.Commit()
-
 	w.WriteHeader(http.StatusOK)
 
+}
+
+func validarProducto(producto modelos.Producto) error {
+	if producto.CodigoUnico == "" {
+		return errors.New("codigo unico no puede estar vacio")
+	}
+	if producto.Nombre == "" {
+		return errors.New("nombre no puede estar vacio")
+	}
+	if producto.Tipo == "" {
+		return errors.New("tipo no puede estar vacio")
+	}
+	if producto.Marca == "" {
+		return errors.New("marca no puede estar vacia")
+	}
+	if producto.StockMinimo == 0 {
+		return errors.New("stock minimo no puede ser cero")
+	}
+	return nil
 }
