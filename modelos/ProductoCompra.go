@@ -14,4 +14,5 @@ type ProductoCompra struct {
 	PrecioDeseado uint      `gorm:"not null"`
 	Fecha         time.Time `gorm:"type:date;default:CURRENT_DATE"`
 	Proveedor     string
+	CantAComprar  uint `gorm:"not null"`
 }

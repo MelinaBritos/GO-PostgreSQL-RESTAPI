@@ -23,10 +23,6 @@ func GetProductoHandler(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 
 	baseDedatos.DB.First(&producto, parametros["id"])
-	if err := validarProducto(producto); err != nil {
-		http.Error(w, "Producto inválido"+err.Error(), http.StatusBadRequest)
-		return
-	}
 
 	if producto.ID == 0 {
 		w.WriteHeader(http.StatusNotFound) // error 404
@@ -45,7 +41,7 @@ func PostProductosHandler(w http.ResponseWriter, r *http.Request) {
 
 	for _, producto := range productos {
 		if err := validarProducto(producto); err != nil {
-			http.Error(w, "Producto inválido"+err.Error(), http.StatusBadRequest)
+			http.Error(w, "Producto inválido: "+err.Error(), http.StatusBadRequest)
 			return
 		}
 	}
@@ -79,28 +75,6 @@ func DeleteProductoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	baseDedatos.DB.Unscoped().Delete(&producto)
-	w.WriteHeader(http.StatusOK)
-
-}
-
-func PutProductoHandler(w http.ResponseWriter, r *http.Request) {
-	var producto modelos.Producto
-	parametros := mux.Vars(r)
-	var stockMinimoNuevo uint
-
-	tx := baseDedatos.DB.Begin()
-	tx.First(&producto, parametros["id"])
-
-	if producto.ID == 0 {
-		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte("Producto no encontrado"))
-		return
-	}
-
-	json.NewDecoder(r.Body).Decode(&stockMinimoNuevo)
-	producto.StockMinimo = stockMinimoNuevo
-	tx.Save(&producto)
-	tx.Commit()
 	w.WriteHeader(http.StatusOK)
 
 }

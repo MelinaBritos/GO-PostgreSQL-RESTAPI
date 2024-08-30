@@ -27,7 +27,6 @@ func main() {
 	r.HandleFunc("/productos/{id}", rutas.GetProductoHandler).Methods("GET")
 	r.HandleFunc("/productos", rutas.PostProductosHandler).Methods("POST")
 	r.HandleFunc("/productos/{id}", rutas.DeleteProductoHandler).Methods("DELETE")
-	r.HandleFunc("/productos/{id}", rutas.PutProductoHandler).Methods("PUT")
 
 	// Rutas de ventas
 
@@ -35,19 +34,24 @@ func main() {
 	r.HandleFunc("/ventas/{id}", rutas.GetVentaHandler).Methods("GET")
 	r.HandleFunc("/ventas", rutas.PostVentasHandler).Methods("POST")
 	r.HandleFunc("/ventas/{id}", rutas.DeleteVentaHandler).Methods("DELETE")
+	r.HandleFunc("/ventas/{id}", rutas.PutVentaHandler).Methods("PUT")
 
 	// Rutas de productos compra
 
-	r.HandleFunc("/productoCompra", rutas.GetProductosCompraHandler).Methods("GET")
-	r.HandleFunc("/productoCompra/{id}", rutas.GetProductoCompraHandler).Methods("GET")
-	r.HandleFunc("/productoCompra", rutas.PostProductosCompraHandler).Methods("POST")
-	r.HandleFunc("/productoCompra/{id}", rutas.DeleteProductoCompraHandler).Methods("DELETE")
+	r.HandleFunc("/productocompra", rutas.GetProductosCompraHandler).Methods("GET")
+	r.HandleFunc("/productocompra/{id}", rutas.GetProductoCompraHandler).Methods("GET")
+	r.HandleFunc("/productocompra", rutas.PostProductosCompraHandler).Methods("POST")
+	r.HandleFunc("/productocompra/{id}", rutas.DeleteProductoCompraHandler).Methods("DELETE")
 
 	// Rutas de compras
 
-	r.HandleFunc("/compra", rutas.GetComprasHandler).Methods("GET")
-	r.HandleFunc("/compra/{id}", rutas.GetCompraHandler).Methods("GET")
-	r.HandleFunc("/compra/{id}", rutas.DeleteCompraHandler).Methods("DELETE")
+	r.HandleFunc("/compras", rutas.GetComprasHandler).Methods("GET")
+	r.HandleFunc("/compras/{id}", rutas.GetCompraHandler).Methods("GET")
+	r.HandleFunc("/compras/{id}", rutas.DeleteCompraHandler).Methods("DELETE")
+
+	// Rutas de configuracion
+
+	r.HandleFunc("/configuracion/{id}", rutas.PutConfiguracionHandler).Methods("PUT")
 
 	// Configura CORS
 	corsHandler := handlers.CORS(
