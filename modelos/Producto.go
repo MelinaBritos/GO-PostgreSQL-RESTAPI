@@ -9,6 +9,6 @@ type Producto struct {
 	Nombre          string  `gorm:"not null"`
 	Tipo            string  `gorm:"not null"`
 	Marca           string  `gorm:"not null"`
-	StockDisponible uint    `gorm:"not null"`
+	StockDisponible float64 `gorm:"not null"`
 	StockMinimo     float64 `gorm:"not null"`
 }
