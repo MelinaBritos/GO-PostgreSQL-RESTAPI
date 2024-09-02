@@ -5,7 +5,7 @@ import "gorm.io/gorm"
 type Configuracion struct {
 	gorm.Model
 
-	StockMinimo   uint `gorm:"not null"`
-	PrecioDeseado uint `gorm:"not null"`
-	CantAComprar  uint `gorm:"not null"`
+	StockMinimo   int     `gorm:"not null"`
+	PrecioDeseado float32 `gorm:"not null"`
+	CantAComprar  int     `gorm:"not null"`
 }

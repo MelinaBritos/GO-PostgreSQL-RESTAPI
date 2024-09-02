@@ -10,13 +10,16 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func PutConfiguracionHandler(w http.ResponseWriter, r *http.Request) {
+func PostConfiguracionHandler(w http.ResponseWriter, r *http.Request) {
 	var configuracion modelos.Configuracion
 	var producto modelos.Producto
-	var productocompra modelos.ProductoCompra
 	parametros := mux.Vars(r)
 
-	json.NewDecoder(r.Body).Decode(&configuracion)
+	if err := json.NewDecoder(r.Body).Decode(&configuracion); err != nil {
+		http.Error(w, "Error al decodificar JSON: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
 	if err := validarConfiguracion(configuracion); err != nil {
 		http.Error(w, "Configuracion inválida: "+err.Error(), http.StatusBadRequest)
 		return
@@ -35,14 +38,13 @@ func PutConfiguracionHandler(w http.ResponseWriter, r *http.Request) {
 		producto.StockMinimo = configuracion.StockMinimo
 	}
 	if configuracion.CantAComprar != 0 {
-		productocompra.CantAComprar = configuracion.CantAComprar
+		producto.CantAComprar = configuracion.CantAComprar
 	}
 	if configuracion.PrecioDeseado != 0 {
-		productocompra.PrecioDeseado = configuracion.PrecioDeseado
+		producto.PrecioDeseado = configuracion.PrecioDeseado
 	}
 
 	tx.Save(&producto)
-	tx.Save(&productocompra)
 	tx.Commit()
 	w.WriteHeader(http.StatusOK)
 
@@ -51,6 +53,9 @@ func PutConfiguracionHandler(w http.ResponseWriter, r *http.Request) {
 func validarConfiguracion(configuracion modelos.Configuracion) error {
 	if configuracion.CantAComprar == 0 && configuracion.PrecioDeseado == 0 && configuracion.StockMinimo == 0 {
 		return errors.New("configuracion invalida")
+	}
+	if configuracion.CantAComprar < 0 || configuracion.PrecioDeseado < 0 || configuracion.StockMinimo < 0 {
+		return errors.New("configuracion invalida, los valores no pueden ser negativos")
 	}
 	return nil
 }

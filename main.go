@@ -14,9 +14,10 @@ func main() {
 	baseDedatos.Conexiondb()
 
 	baseDedatos.DB.AutoMigrate(modelos.Producto{})
-	baseDedatos.DB.AutoMigrate(modelos.Venta{})
+	baseDedatos.DB.AutoMigrate(modelos.VentaUnitaria{})
+	baseDedatos.DB.AutoMigrate(modelos.Carrito{})
 	baseDedatos.DB.AutoMigrate(modelos.Compra{})
-	baseDedatos.DB.AutoMigrate(modelos.ProductoCompra{})
+	baseDedatos.DB.AutoMigrate(modelos.Catalogo{})
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", rutas.HomeHandler)
@@ -24,34 +25,42 @@ func main() {
 	// Rutas de productos
 
 	r.HandleFunc("/productos", rutas.GetProductosHandler).Methods("GET")
+	r.HandleFunc("/productosFiltro", rutas.GetProductosFiltroHandler).Methods("GET")
 	r.HandleFunc("/productos/{id}", rutas.GetProductoHandler).Methods("GET")
 	r.HandleFunc("/productos", rutas.PostProductosHandler).Methods("POST")
 	r.HandleFunc("/productos/{id}", rutas.DeleteProductoHandler).Methods("DELETE")
 
-	// Rutas de ventas
+	// Rutas de carrito
 
-	r.HandleFunc("/ventas", rutas.GetVentasHandler).Methods("GET")
-	r.HandleFunc("/ventas/{id}", rutas.GetVentaHandler).Methods("GET")
-	r.HandleFunc("/ventas", rutas.PostVentasHandler).Methods("POST")
-	r.HandleFunc("/ventas/{id}", rutas.DeleteVentaHandler).Methods("DELETE")
-	r.HandleFunc("/ventas/{id}", rutas.PutVentaHandler).Methods("PUT")
+	r.HandleFunc("/carrito", rutas.GetCarritosHandler).Methods("GET")
+	r.HandleFunc("/carrito/{id}", rutas.GetCarritoHandler).Methods("GET")
+	r.HandleFunc("/carrito", rutas.PostCarritoHandler).Methods("POST")
+	r.HandleFunc("/carrito/{id}", rutas.DeleteCarritoHandler).Methods("DELETE")
+	r.HandleFunc("/carrito/{id}", rutas.PutCarritoHandler).Methods("PUT")
 
-	// Rutas de productos compra
+	// Rutas de catalogo
 
-	r.HandleFunc("/productocompra", rutas.GetProductosCompraHandler).Methods("GET")
-	r.HandleFunc("/productocompra/{id}", rutas.GetProductoCompraHandler).Methods("GET")
-	r.HandleFunc("/productocompra", rutas.PostProductosCompraHandler).Methods("POST")
-	r.HandleFunc("/productocompra/{id}", rutas.DeleteProductoCompraHandler).Methods("DELETE")
+	r.HandleFunc("/catalogo", rutas.GetCatalogosHandler).Methods("GET")
+	r.HandleFunc("/catalogo/{id}", rutas.GetCatalogoHandler).Methods("GET")
+	r.HandleFunc("/catalogo", rutas.PostCatalogosHandler).Methods("POST")
+	r.HandleFunc("/catalogo/{id}", rutas.DeleteCatalogoHandler).Methods("DELETE")
 
 	// Rutas de compras
 
 	r.HandleFunc("/compras", rutas.GetComprasHandler).Methods("GET")
 	r.HandleFunc("/compras/{id}", rutas.GetCompraHandler).Methods("GET")
+	r.HandleFunc("/comprasFiltro", rutas.GetComprasFiltroHandler).Methods("GET")
+	r.HandleFunc("/compras", rutas.PostCompraHandler).Methods("POST")
 	r.HandleFunc("/compras/{id}", rutas.DeleteCompraHandler).Methods("DELETE")
 
 	// Rutas de configuracion
 
-	r.HandleFunc("/configuracion/{id}", rutas.PutConfiguracionHandler).Methods("PUT")
+	r.HandleFunc("/configuracion/{id}", rutas.PostConfiguracionHandler).Methods("POST")
+
+	// Rutas de ventas unitarias
+
+	r.HandleFunc("/ventaUnitaria", rutas.GetVentasUnitariasHandler).Methods("GET")
+	r.HandleFunc("/ventaUnitaria/{id}", rutas.GetVentaUnitariaHandler).Methods("GET")
 
 	// Configura CORS
 	corsHandler := handlers.CORS(
@@ -62,4 +71,5 @@ func main() {
 
 	// Inicia el servidor con CORS habilitado
 	http.ListenAndServe(":8080", corsHandler(r))
+
 }

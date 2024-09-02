@@ -34,10 +34,40 @@ func GetProductoHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func GetProductosFiltroHandler(w http.ResponseWriter, r *http.Request) {
+	var productos []modelos.Producto
+	var filtros modelos.FiltroProducto
+
+	if err := json.NewDecoder(r.Body).Decode(&filtros); err != nil {
+		http.Error(w, "Error al decodificar los filtros: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	db := baseDedatos.DB
+
+	if filtros.Nombre != "" {
+		db = db.Where("nombre ILIKE ?", "%"+filtros.Nombre+"%")
+	}
+	if filtros.Marca != "" {
+		db = db.Where("marca ILIKE ?", "%"+filtros.Marca+"%")
+	}
+	if filtros.Tipo != "" {
+		db = db.Where("tipo ILIKE ?", "%"+filtros.Tipo+"%")
+	}
+
+	db.Find(&productos)
+
+	json.NewEncoder(w).Encode(&productos)
+
+}
+
 func PostProductosHandler(w http.ResponseWriter, r *http.Request) {
 	var productos []modelos.Producto
 
-	json.NewDecoder(r.Body).Decode(&productos)
+	if err := json.NewDecoder(r.Body).Decode(&productos); err != nil {
+		http.Error(w, "Error al decodificar los productos: "+err.Error(), http.StatusBadRequest)
+		return
+	}
 
 	for _, producto := range productos {
 		if err := validarProducto(producto); err != nil {
@@ -53,7 +83,7 @@ func PostProductosHandler(w http.ResponseWriter, r *http.Request) {
 		err := productoCreado.Error
 		if err != nil {
 			tx.Rollback()
-			http.Error(w, "Error al crear las ventas: "+err.Error(), http.StatusInternalServerError)
+			http.Error(w, "Error al crear los productos: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
 	}
@@ -92,8 +122,17 @@ func validarProducto(producto modelos.Producto) error {
 	if producto.Marca == "" {
 		return errors.New("marca no puede estar vacia")
 	}
-	if producto.StockMinimo == 0 {
-		return errors.New("stock minimo no puede ser cero")
+	if producto.StockDisponible <= 0 || producto.StockMinimo <= 0 {
+		return errors.New("stock minimo y stock disponible no pueden ser igual o menor a cero")
+	}
+	if producto.Precio <= 0 {
+		return errors.New("precio no puede ser cero")
+	}
+	if producto.CantAComprar <= 0 {
+		return errors.New("cantidad a comprar no puede ser igual o menor a cero")
+	}
+	if producto.PrecioDeseado <= 0 {
+		return errors.New("precio deseado no puede ser igual o menor a cero")
 	}
 	return nil
 }

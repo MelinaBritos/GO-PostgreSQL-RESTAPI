@@ -1,14 +1,17 @@
 package modelos
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 )
 
 type Compra struct {
 	gorm.Model
 
-	CodigoProductoCompra string `gorm:"not null"`
-	Precio               uint   `gorm:"not null"`
-	Fecha                string `gorm:"not null"`
-	Estado               string `gorm:"not null"`
+	CodigoProducto string    `gorm:"not null"`
+	CantComprada   int       `gorm:"not null"`
+	Monto          float32   `gorm:"not null"` //Monto es precio de producto(catalogo) x cantComprada
+	Fecha          time.Time `gorm:"type:date;default:CURRENT_DATE"`
+	Estado         string    `gorm:"not null"`
 }
