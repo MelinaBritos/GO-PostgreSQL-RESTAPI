@@ -7,9 +7,8 @@ import (
 	"gorm.io/gorm"
 )
 
-var DSN = "host=localhost user=postgres password=agra dbname=tplabo port=5432"
+var DSN = "host=bdlaboratorio-melina-67b1.h.aivencloud.com user=avnadmin password=AVNS_7ZlUIi1h_s27gjWMtPX dbname=defaultdb port=22433"
 
-// "host=go-postgresql-apirest-melina-67b1.h.aivencloud.com user=avnadmin password=AVNS_Klv6DpbXmApLvr1axHR dbname=defaultdb port=22433"
 var DB *gorm.DB
 
 func Conexiondb() {
