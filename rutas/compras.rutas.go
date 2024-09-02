@@ -34,7 +34,7 @@ func GetCompraHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func GetComprasFiltroHandler(w http.ResponseWriter, r *http.Request) {
+func PutComprasFiltroHandler(w http.ResponseWriter, r *http.Request) {
 	var compras []modelos.Compra
 	var filtros modelos.FiltroCompra
 

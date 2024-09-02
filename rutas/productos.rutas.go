@@ -34,7 +34,7 @@ func GetProductoHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func GetProductosFiltroHandler(w http.ResponseWriter, r *http.Request) {
+func PutProductosFiltroHandler(w http.ResponseWriter, r *http.Request) {
 	var productos []modelos.Producto
 	var filtros modelos.FiltroProducto
 

@@ -25,7 +25,7 @@ func main() {
 	// Rutas de productos
 
 	r.HandleFunc("/productos", rutas.GetProductosHandler).Methods("GET")
-	r.HandleFunc("/productosFiltro", rutas.GetProductosFiltroHandler).Methods("GET")
+	r.HandleFunc("/productosFiltro", rutas.PutProductosFiltroHandler).Methods("PUT")
 	r.HandleFunc("/productos/{id}", rutas.GetProductoHandler).Methods("GET")
 	r.HandleFunc("/productos", rutas.PostProductosHandler).Methods("POST")
 	r.HandleFunc("/productos/{id}", rutas.DeleteProductoHandler).Methods("DELETE")
@@ -49,7 +49,7 @@ func main() {
 
 	r.HandleFunc("/compras", rutas.GetComprasHandler).Methods("GET")
 	r.HandleFunc("/compras/{id}", rutas.GetCompraHandler).Methods("GET")
-	r.HandleFunc("/comprasFiltro", rutas.GetComprasFiltroHandler).Methods("GET")
+	r.HandleFunc("/comprasFiltro", rutas.PutComprasFiltroHandler).Methods("PUT")
 	r.HandleFunc("/compras", rutas.PostCompraHandler).Methods("POST")
 	r.HandleFunc("/compras/{id}", rutas.DeleteCompraHandler).Methods("DELETE")
 
