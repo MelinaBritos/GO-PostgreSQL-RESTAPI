@@ -41,6 +41,9 @@ func main() {
 	r.HandleFunc("/carrito/{id}", rutas.DeleteCarritoHandler).Methods("DELETE")
 	r.HandleFunc("/carrito/{id}", rutas.PutCarritoHandler).Methods("PUT")
 
+	// Rutas de carrito filtro
+	r.HandleFunc("/carritosFiltro", rutas.PostCarritosFiltroHandler).Methods("POST")
+
 	// Rutas de catalogo
 
 	r.HandleFunc("/catalogo", rutas.GetCatalogosHandler).Methods("GET")
