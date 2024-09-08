@@ -20,10 +20,10 @@ func PostCarritosFiltroHandler(w http.ResponseWriter, r *http.Request) {
 	db := baseDedatos.DB
 
 	if filtros.Tipo == "mensual" {
-		db = db.Where("fechaventa ILIKE ?", "%-"+filtros.Fecha)
+		db = db.Where("fecha_venta ILIKE ?", "%-"+filtros.Fecha)
 	}
 	if filtros.Tipo == "diario" {
-		db = db.Where("fechaventa ILIKE ?", filtros.Fecha)
+		db = db.Where("fecha_venta ILIKE ?", filtros.Fecha)
 	}
 
 	db.Find(&carritos)
