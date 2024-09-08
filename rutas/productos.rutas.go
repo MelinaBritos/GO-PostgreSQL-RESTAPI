@@ -45,7 +45,7 @@ func PutProductoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, producto := range productos {
-		producto.Precio = producto.Precio * (1 + porcentaje/100)
+		baseDedatos.DB.Model(&productos).Update("precio", producto.Precio*(1+porcentaje/100))
 	}
 
 }
