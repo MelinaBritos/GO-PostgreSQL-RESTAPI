@@ -25,10 +25,13 @@ func main() {
 	// Rutas de productos
 
 	r.HandleFunc("/productos", rutas.GetProductosHandler).Methods("GET")
-	r.HandleFunc("/productosFiltro", rutas.PutProductosFiltroHandler).Methods("PUT")
 	r.HandleFunc("/productos/{id}", rutas.GetProductoHandler).Methods("GET")
 	r.HandleFunc("/productos", rutas.PostProductosHandler).Methods("POST")
 	r.HandleFunc("/productos/{id}", rutas.DeleteProductoHandler).Methods("DELETE")
+	r.HandleFunc("/productos", rutas.PutProductoHandler).Methods("PUT")
+
+	// Rutas de producto filtro
+	r.HandleFunc("/productosFiltro", rutas.PostProductosFiltroHandler).Methods("POST")
 
 	// Rutas de carrito
 

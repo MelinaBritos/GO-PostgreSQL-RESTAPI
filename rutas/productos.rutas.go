@@ -34,30 +34,19 @@ func GetProductoHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func PutProductosFiltroHandler(w http.ResponseWriter, r *http.Request) {
+func PutProductoHandler(w http.ResponseWriter, r *http.Request) {
 	var productos []modelos.Producto
-	var filtros modelos.FiltroProducto
+	var porcentaje float32
 
-	if err := json.NewDecoder(r.Body).Decode(&filtros); err != nil {
-		http.Error(w, "Error al decodificar los filtros: "+err.Error(), http.StatusBadRequest)
+	baseDedatos.DB.Find(&productos)
+	if err := json.NewDecoder(r.Body).Decode(&porcentaje); err != nil {
+		http.Error(w, "Error al decodificar los porcentaje: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	db := baseDedatos.DB
-
-	if filtros.Nombre != "" {
-		db = db.Where("nombre ILIKE ?", "%"+filtros.Nombre+"%")
+	for _, producto := range productos {
+		producto.Precio = producto.Precio * (1 + porcentaje/100)
 	}
-	if filtros.Marca != "" {
-		db = db.Where("marca ILIKE ?", "%"+filtros.Marca+"%")
-	}
-	if filtros.Tipo != "" {
-		db = db.Where("tipo ILIKE ?", "%"+filtros.Tipo+"%")
-	}
-
-	db.Find(&productos)
-
-	json.NewEncoder(w).Encode(&productos)
 
 }
 
