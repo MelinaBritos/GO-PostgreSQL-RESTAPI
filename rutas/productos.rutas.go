@@ -39,13 +39,14 @@ func PutProductoHandler(w http.ResponseWriter, r *http.Request) {
 	var porcentaje float32
 
 	baseDedatos.DB.Find(&productos)
+
 	if err := json.NewDecoder(r.Body).Decode(&porcentaje); err != nil {
 		http.Error(w, "Error al decodificar los porcentaje: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	for _, producto := range productos {
-		baseDedatos.DB.Model(&productos).Update("precio", producto.Precio*(1+porcentaje/100))
+	for i, _ := range productos {
+		baseDedatos.DB.Model(&productos[i]).Update("precio", productos[i].Precio*(1+porcentaje/100))
 	}
 
 }
