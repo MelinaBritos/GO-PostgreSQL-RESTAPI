@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/MelinaBritos/GO-PostgreSQL-RESTAPI/baseDedatos"
 	"github.com/MelinaBritos/GO-PostgreSQL-RESTAPI/modelos"
@@ -81,6 +82,7 @@ func PostCompraHandler(w http.ResponseWriter, r *http.Request) {
 
 	compra.Estado = "Completado"
 	compra.Monto = productoCatalogo.PrecioActual * float32(compra.CantComprada)
+	compra.Fecha = time.Now().Format("02-01-2006")
 	Producto.StockDisponible += compra.CantComprada
 	tx.Save(Producto)
 
