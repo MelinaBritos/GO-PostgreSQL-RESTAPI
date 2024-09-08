@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/MelinaBritos/GO-PostgreSQL-RESTAPI/baseDedatos"
 	"github.com/MelinaBritos/GO-PostgreSQL-RESTAPI/modelos"
@@ -65,6 +66,7 @@ func PostCarritoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	Carrito.Estado = "Pendiente"
+	Carrito.FechaVenta = time.Now().Format("02-01-2006")
 	if err := tx.Save(&Carrito).Error; err != nil {
 		tx.Rollback()
 		http.Error(w, "Error al actualizar el carrito: "+err.Error(), http.StatusInternalServerError)
