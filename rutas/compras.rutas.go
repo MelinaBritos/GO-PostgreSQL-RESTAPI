@@ -49,6 +49,9 @@ func PutComprasFiltroHandler(w http.ResponseWriter, r *http.Request) {
 	if filtros.Estado != "" {
 		db = db.Where("estado ILIKE ?", filtros.Estado)
 	}
+	if filtros.Tipo != "" {
+		db = db.Where("tipo ILIKE ?", filtros.Tipo)
+	}
 
 	db.Find(&compras)
 
@@ -83,6 +86,7 @@ func PostCompraHandler(w http.ResponseWriter, r *http.Request) {
 	compra.Estado = "Completado"
 	compra.Monto = productoCatalogo.PrecioActual * float32(compra.CantComprada)
 	compra.Fecha = time.Now().Format("02-01-2006")
+	compra.Tipo = "manual"
 	Producto.StockDisponible += compra.CantComprada
 	tx.Save(Producto)
 

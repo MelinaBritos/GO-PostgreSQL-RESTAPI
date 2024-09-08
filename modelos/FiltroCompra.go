@@ -6,4 +6,5 @@ type FiltroCompra struct {
 	gorm.Model
 
 	Estado string
+	Tipo   string
 }

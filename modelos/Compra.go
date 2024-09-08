@@ -12,4 +12,5 @@ type Compra struct {
 	Monto          float32 `gorm:"not null"` //Monto es precio de producto(catalogo) x cantComprada
 	Fecha          string
 	Estado         string `gorm:"not null"`
+	Tipo           string
 }

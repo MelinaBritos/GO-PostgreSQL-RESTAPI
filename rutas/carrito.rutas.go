@@ -211,6 +211,7 @@ func realizarComprasAutomaticas(carrito modelos.Carrito) error {
 				compra.Monto = productoCatalogo.PrecioActual * float32(Producto.CantAComprar)
 				Producto.StockDisponible += Producto.CantAComprar
 				compra.Fecha = time.Now().Format("02-01-2006")
+				compra.Tipo = "automatica"
 			}
 
 			compraCreada := tx.Create(&compra)
