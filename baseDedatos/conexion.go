@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var DSN = "host=tplabo-melina-67b1.e.aivencloud.com user=avnadmin password=AVNS_EUaiK9jTMZQAtqUxwRD dbname=defaultdb port=22433"
+var DSN = "host=tplabo-melina-67b1.e.aivencloud.com user=avnadmin password=AVNS_YVzxNjPP25xiqzzBuH_ dbname=defaultdb port=22433"
 
 var DB *gorm.DB
 
