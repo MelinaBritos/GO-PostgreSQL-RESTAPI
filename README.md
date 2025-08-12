@@ -1,0 +1,1 @@
+sistema de gestión de stock mediante una API REST en Go con PostgreSQL, permitiendo el ingreso de productos, la realización de ventas y la detección automática de productos con bajo stock. El sistema genera órdenes de compra si los costos están dentro de valores predefinidos. La API fue diseñada para integrarse con la interfaz de una página web.
